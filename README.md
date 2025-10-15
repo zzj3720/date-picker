@@ -1,13 +1,20 @@
 # LLM-Powered Date Picker
 
-A flexible React date picker component that uses LLMs to parse natural language date inputs. Supports multiple LLM providers including OpenAI, Claude, Gemini, DeepSeek, Qwen, Doubao, OpenRouter, Chrome AI (built-in Gemini Nano), LLM Studio, and Ollama.
+A flexible React date picker component that uses LLMs to parse natural language date inputs. Currently supports local AI providers: Chrome AI (built-in Gemini Nano), Ollama, and LM Studio. Cloud providers (OpenAI, Claude, Gemini, DeepSeek, Qwen, Doubao, OpenRouter) coming soon via waitlist.
+
+🔗 **Live Demo**: [https://zzj3720.github.io/date-picker](https://zzj3720.github.io/date-picker)
+
+🌟 **GitHub**: [https://github.com/zzj3720/date-picker](https://github.com/zzj3720/date-picker)
 
 ## Features
 
 - **Natural Language Input**: Type dates in plain English (or any language your LLM supports)
-- **Multiple LLM Providers**: Pluggable architecture supporting 8+ providers
+- **Multiple LLM Providers**: Pluggable architecture with local AI providers
+  - 💻 Local: Chrome AI (Gemini Nano), Ollama, LM Studio
+  - ☁️ Cloud: Coming soon (join waitlist for OpenAI, Claude, Gemini, DeepSeek, Qwen, Doubao)
+- **Chrome AI Support**: Use Chrome's built-in Gemini Nano for offline, privacy-focused AI
 - **Simple Interface**: Clean UI showing only provider selection and date input
-- **Configuration Dialog**: Configure all providers in a modal with vertical tabs
+- **Configuration Dialog**: Configure all providers in individual dialogs
 - **Persistent Configuration**: All provider configs saved in localStorage
 - **Visual Indicators**: See which providers are configured at a glance
 - **Fallback Parser**: Falls back to `chrono-node` when configuration is invalid
@@ -30,81 +37,66 @@ import { LlmDatePicker } from './components/date-picker/LlmDatePicker'
 import { providerList } from './llm/providers'
 
 function App() {
-  const [date, setDate] = useState<DateInterpretation | null>(null)
+  const [date, setDate] = useState<Date | null>(null)
 
   return (
     <LlmDatePicker
       providers={providerList}
-      onInterpretationChange={(value) => setDate(value)}
+      value={date}
+      onChange={(date) => setDate(date)}
     />
   )
 }
 ```
 
-### With Presets
-
-```tsx
-const presets = [
-  { label: 'Tomorrow 9am', value: '2025-10-16T09:00:00Z' },
-  { label: 'Next Monday', value: '2025-10-20T00:00:00Z' },
-]
-
-<LlmDatePicker
-  providers={providerList}
-  presets={presets}
-  onInterpretationChange={(value) => setDate(value)}
-/>
-```
-
 ## Supported Providers
 
-### OpenAI
-- Models: `gpt-4.1-mini`, `gpt-4o`, `o4`
-- Endpoint: `https://api.openai.com/v1`
+### Cloud Providers (Coming Soon)
 
-### Anthropic Claude
-- Models: `claude-3-5-sonnet-20241022`, `claude-3-5-haiku-20241022`
-- Endpoint: `https://api.anthropic.com/v1`
+Cloud providers are currently in development. Join the waitlist to get early access when they become available:
 
-### Google Gemini
-- Models: `gemini-2.0-flash-exp`, `gemini-pro`
-- Endpoint: `https://generativelanguage.googleapis.com/v1beta`
+- **OpenAI** (GPT-4o, GPT-4.1-mini, o4)
+- **Anthropic Claude** (Claude 3.5 Sonnet, Claude 3.5 Haiku)
+- **Google Gemini** (Gemini 2.0 Flash, Gemini Pro)
+- **DeepSeek** (DeepSeek Chat, DeepSeek Reasoner)
+- **Alibaba Qwen** (Qwen Long, Qwen Turbo)
+- **ByteDance Doubao**
 
-### DeepSeek
-- Models: `deepseek-chat`, `deepseek-reasoner`
-- Endpoint: `https://api.deepseek.com/v1`
+All cloud providers will be accessible through a unified API with flexible pricing plans (from free hobby tier to enterprise plans).
 
-### Alibaba Qwen
-- Models: `qwen-long`, `qwen-turbo`
-- Endpoint: `https://dashscope.aliyuncs.com/compatible-mode/v1`
+---
 
-### ByteDance Doubao
-- Models: `ep-20241019-121424-64k`
-- Endpoint: `https://ark.cn-beijing.volces.com/api/v3`
+### Local Providers
 
-### OpenRouter
-- Models: `openrouter/auto` (auto-routes to best model)
-- Endpoint: `https://openrouter.ai/api/v1`
+Local AI providers run entirely on your device, ensuring privacy and zero API costs.
 
-### Chrome AI (Local)
-- Uses Chrome's built-in Gemini Nano model (Chrome 140+ supports English, Spanish, Japanese)
-- No API key or endpoint required
-- Runs completely offline in the browser
-- Requirements:
-  - Chrome 127+ (Dev or Canary recommended, Chrome 140+ for best experience)
-  - Enable `chrome://flags/#prompt-api-for-gemini-nano-multimodal-input`
-  - 22 GB free storage space
-  - GPU with >4GB VRAM or 16GB+ RAM with 4+ CPU cores
-  - Check status at `chrome://on-device-internals`
+#### Chrome AI (Recommended for Privacy)
+- **Model**: Chrome's built-in Gemini Nano
+- **Privacy**: 100% offline, no data sent to servers
+- **Cost**: Free, no API key needed
+- **Setup**:
+  1. Use Chrome 127+ (Dev/Canary recommended)
+  2. Enable flag: `chrome://flags/#prompt-api-for-gemini-nano-multimodal-input`
+  3. Restart Chrome
+  4. Model downloads automatically (~1.7GB download, ~22GB total space needed)
+  5. Verify: `await LanguageModel.availability()` in DevTools
+- **Requirements**:
+  - GPU with at least 4GB VRAM
+  - ~22GB free storage space for the model
+- **Status**: Check `chrome://on-device-internals`
 
-### Ollama (Local)
-- Run open-source LLMs locally
-- Models: `llama3.2:3b`, `qwen2.5`, etc.
-- Endpoint: `http://localhost:11434`
+📖 See [CHROME_AI_SETUP.md](./CHROME_AI_SETUP.md) for detailed setup instructions.
 
-### LLMStudio (Local)
-- Self-hosted inference endpoint
-- Endpoint: `http://localhost:1234/v1`
+#### Ollama
+- **Models**: `llama3.2:3b`, `qwen2.5`, `mistral`, etc.
+- **Base URL**: `http://localhost:11434` (default)
+- **Features**: Auto-fetch available models from your local Ollama instance
+- **Setup**: [Install Ollama](https://ollama.com), pull models, and start the server
+
+#### LM Studio
+- **Description**: Self-hosted inference with OpenAI-compatible API
+- **Base URL**: `http://localhost:1234/v1` (default)
+- **Setup**: [Download LM Studio](https://lmstudio.ai), load models, and start the local server
 
 ## Architecture
 
@@ -116,10 +108,11 @@ src/llm/
 ├── interpreter.ts        # Main interpreter + fallback
 └── providers/
     ├── base.ts           # Abstract base class
-    ├── cloud-providers.tsx # Cloud providers (OpenAI, Claude, Gemini, etc.)
+    ├── cloud-providers.tsx # Cloud waitlist implementation
     ├── chrome-ai.tsx     # Chrome built-in AI implementation
     ├── ollama.tsx        # Ollama implementation
-    ├── lmstudio.tsx      # LMStudio implementation
+    ├── lmstudio.tsx      # LM Studio implementation
+    ├── waitlist.tsx      # Waitlist components
     └── index.ts          # Provider registry
 ```
 
@@ -128,49 +121,91 @@ src/llm/
 Each provider implements the `LLMProvider` interface:
 
 ```typescript
-interface LLMProvider {
+interface LLMProvider<TConfig = unknown> {
   readonly id: ProviderId
   readonly name: string
   readonly description: string
-  readonly defaultModel?: string
+  readonly icon?: JSX.Element
+  readonly shortName?: string
   readonly docsUrl?: string
+  readonly configSchema: z.ZodType<TConfig>
+  readonly defaultConfig: TConfig
 
-  interpretDate(request: InterpretDateRequest): Promise<DateInterpretation>
+  ConfigComponent: (props: ProviderConfigProps<TConfig>) => JSX.Element
+
+  interpretDate(request: InterpretDateRequest<TConfig>): Promise<DateInterpretation>
 }
 ```
 
-**No switch-case logic** - each provider encapsulates its own configuration and request handling.
+**No switch-case logic** - each provider encapsulates its own configuration UI and request handling.
 
 ## Adding a Custom Provider
 
 1. Create a new provider class extending `BaseLLMProvider`:
 
 ```typescript
-// src/llm/providers/my-provider.ts
+// src/llm/providers/my-provider.tsx
+import { z } from 'zod'
 import { BaseLLMProvider } from './base'
-import type { DateInterpretation, InterpretDateRequest, ProviderId } from '../types'
+import type { DateInterpretation, InterpretDateRequest, ProviderId, ProviderConfigProps } from '../types'
+import { Input } from '../../components/ui/input'
+import { Label } from '../../components/ui/label'
 
-export class MyProvider extends BaseLLMProvider {
+const myProviderConfigSchema = z.object({
+  apiKey: z.string().min(1, 'API key is required'),
+  endpoint: z.string().url().optional(),
+})
+
+type MyProviderConfig = z.infer<typeof myProviderConfigSchema>
+
+function MyProviderConfigComponent({ config, onChange }: ProviderConfigProps<MyProviderConfig>) {
+  return (
+    <div className="space-y-4">
+      <div>
+        <Label htmlFor="apiKey">API Key</Label>
+        <Input
+          id="apiKey"
+          type="password"
+          value={config.apiKey ?? ''}
+          onChange={(e) => onChange({ ...config, apiKey: e.target.value })}
+        />
+      </div>
+      <div>
+        <Label htmlFor="endpoint">Endpoint (optional)</Label>
+        <Input
+          id="endpoint"
+          value={config.endpoint ?? ''}
+          onChange={(e) => onChange({ ...config, endpoint: e.target.value })}
+          placeholder="https://api.myprovider.com/v1"
+        />
+      </div>
+    </div>
+  )
+}
+
+export class MyProvider extends BaseLLMProvider<MyProviderConfig> {
   readonly id: ProviderId = 'myprovider'
   readonly name = 'My Provider'
   readonly description = 'Custom LLM provider'
-  readonly defaultModel = 'my-model-v1'
   readonly docsUrl = 'https://docs.myprovider.com'
+  readonly configSchema = myProviderConfigSchema
+  readonly defaultConfig: MyProviderConfig = { apiKey: '' }
+
+  ConfigComponent = MyProviderConfigComponent
 
   private readonly baseUrl = 'https://api.myprovider.com/v1'
 
-  async interpretDate(request: InterpretDateRequest): Promise<DateInterpretation> {
-    const { prompt, apiKey, model, timezone, now = new Date(), signal } = request
+  async interpretDate(request: InterpretDateRequest<MyProviderConfig>): Promise<DateInterpretation> {
+    const { prompt, config, timezone, now = new Date(), signal } = request
 
     // Implement your API call here
-    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+    const response = await fetch(config.endpoint ?? this.baseUrl + '/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${config.apiKey}`,
       },
       body: JSON.stringify({
-        model: model ?? this.defaultModel,
         messages: [
           { role: 'system', content: this.getSystemPrompt({ timezone, now }) },
           { role: 'user', content: prompt },
@@ -185,26 +220,54 @@ export class MyProvider extends BaseLLMProvider {
 }
 ```
 
-2. Register it in `src/llm/providers/index.ts`:
+2. Add the ID to the `ProviderId` type in `src/llm/types.ts`:
+
+```typescript
+export type ProviderId =
+  | 'ollama'
+  | 'lmstudio'
+  | 'chrome-ai'
+  | 'cloud'
+  | 'myprovider'  // Add your new provider ID
+```
+
+3. Register it in `src/llm/providers/index.ts`:
 
 ```typescript
 import { MyProvider } from './my-provider'
 
-export const providers: Record<ProviderId, LLMProvider> = {
-  // ... existing providers
-  myprovider: new MyProvider(),
+export const providers: Record<ProviderId, LLMProvider<any>> = {
+  cloud: new CloudProvidersProvider(),
+  lmstudio: new LMStudioProvider(),
+  ollama: new OllamaProvider(),
+  'chrome-ai': new ChromeAIProvider(),
+  myprovider: new MyProvider(),  // Add your new provider
 }
 ```
 
-3. Add the ID to the `ProviderId` type in `src/llm/types.ts`:
+## Quick Start
 
-```typescript
-export type ProviderId =
-  | 'openai'
-  | 'anthropic'
-  // ... other providers
-  | 'myprovider'
+### Try Chrome AI (No API Key Needed!)
+
+1. Clone the repository:
+```bash
+git clone https://github.com/zzj3720/date-picker.git
+cd date-picker
 ```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start dev server:
+```bash
+npm run dev
+```
+
+4. Open in Chrome 127+ and enable Chrome AI (see [CHROME_AI_SETUP.md](./CHROME_AI_SETUP.md))
+
+5. Select "Chrome AI" provider and start typing natural language dates!
 
 ## Development
 
@@ -217,6 +280,9 @@ npm run build
 
 # Lint
 npm run lint
+
+# Preview production build
+npm run preview
 ```
 
 ## API Response Format
@@ -225,14 +291,32 @@ All providers return a standardized `DateInterpretation`:
 
 ```typescript
 type DateInterpretation = {
-  value: string              // ISO 8601 date string
-  providerId: ProviderId     // Which provider was used
-  timezone?: string          // IANA timezone
-  confidence?: number        // 0-1 confidence score
-  reasoning?: string         // LLM's explanation
-  rawResponse?: unknown      // Original API response
+  value: string                      // ISO 8601 date string
+  providerId: ProviderId | 'fallback' // Which provider was used
+  timezone?: string                  // IANA timezone
+  confidence?: number                // 0-1 confidence score
+  reasoning?: string                 // LLM's explanation
+  rawResponse?: unknown              // Original API response
 }
 ```
+
+## Why Use This?
+
+- **Privacy-First**: Chrome AI runs 100% offline with zero data collection
+- **Cost-Effective**: No API costs for local providers
+- **Flexible**: Switch between providers based on your needs
+- **Modern**: Built with latest React, TypeScript, and Tailwind CSS
+- **Extensible**: Easy to add custom providers
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
 
@@ -243,3 +327,8 @@ MIT
 - UI: [shadcn/ui](https://ui.shadcn.com/)
 - Date parsing fallback: [chrono-node](https://github.com/wanasit/chrono)
 - Icons: [Lucide React](https://lucide.dev/)
+- Chrome AI: [Built-in AI Documentation](https://developer.chrome.com/docs/ai/built-in)
+
+## Star History
+
+If you find this project useful, please consider giving it a ⭐️ on [GitHub](https://github.com/zzj3720/date-picker)!
