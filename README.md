@@ -2,7 +2,7 @@
 
 A flexible React date picker component that uses LLMs to parse natural language date inputs. Currently supports local AI providers: Chrome AI (built-in Gemini Nano), Ollama, and LM Studio. Cloud providers (OpenAI, Claude, Gemini, DeepSeek, Qwen, Doubao, OpenRouter) coming soon via waitlist.
 
-🔗 **Live Demo**: [https://zzj3720.github.io/date-picker](https://zzj3720.github.io/date-picker)
+🔗 **Live Demo**: [https://date-picker-mu-cyan.vercel.app/](https://date-picker-mu-cyan.vercel.app/)
 
 🌟 **GitHub**: [https://github.com/zzj3720/date-picker](https://github.com/zzj3720/date-picker)
 
