@@ -159,28 +159,35 @@ export function LlmDatePicker({ providers, value, onChange }: LlmDatePickerProps
           >
             <SelectTrigger className="h-6 w-auto shrink-0 border-0 p-0 shadow-none focus:ring-0 [&>svg]:hidden">
               {activeProvider ? (
-                <span className="text-xs font-semibold text-muted-foreground">{activeProvider.shortName || activeProvider.name}</span>
+                <span className={`text-xs font-semibold ${activeProvider.id === 'cloud' ? 'bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-bold' : 'text-muted-foreground'}`}>
+                  {activeProvider.shortName || activeProvider.name}
+                </span>
               ) : cloudProvider ? (
-                <span className="text-xs font-semibold text-muted-foreground">{cloudProvider.shortName || cloudProvider.name}</span>
+                <span className="text-xs font-semibold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-bold">
+                  {cloudProvider.shortName || cloudProvider.name}
+                </span>
               ) : (
                 <span className="text-xs font-semibold text-muted-foreground">Select</span>
               )}
             </SelectTrigger>
             <SelectContent>
               {providers.map((provider) => {
-                const isConfigured = providerConfigStatus[provider.id]
-                const isCloudProvider = cloudProvider && provider.id === cloudProvider.id
+                const isCloud = provider.id === 'cloud'
+                const isLMStudio = provider.id === 'lmstudio'
                 
                 return (
                   <SelectItem key={provider.id} value={provider.id}>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold">{provider.name}</span>
-                      {isCloudProvider ? (
-                        null
-                      ) : isConfigured ? (
-                        <span className="text-xs text-green-600">✓ Configured</span>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">Not configured</span>
+                      <span className={`text-sm ${isCloud ? 'bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-bold' : 'text-muted-foreground font-medium'}`}>
+                        {provider.name}
+                      </span>
+                      {isCloud && (
+                        <span className="text-xs font-semibold text-white bg-gradient-to-r from-primary to-primary/80 px-2 py-0.5 rounded shadow-sm">
+                          ✨ Recommended
+                        </span>
+                      )}
+                      {isLMStudio && (
+                        <span className="text-xs text-primary bg-primary/10 px-1.5 py-0.5 rounded">Recommended</span>
                       )}
                     </div>
                   </SelectItem>
